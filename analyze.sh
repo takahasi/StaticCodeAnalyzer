@@ -83,7 +83,7 @@ function do_cppcheck() {
   local CPPCHECK_RESULT_CSV=${CPPCHECK_RESULT}.csv
   local CPPCHECK_RESULT_HTML=${CPPCHECK_RESULT}.html
   local CPPCHECK_OPTION="--quiet --enable=all --file-list=-"
-  local CPPCHECK_OPTION_XML="${CPPCHECK_OPTION} --xml"
+  local CPPCHECK_OPTION_XML="${CPPCHECK_OPTION} --xml --xml-version=2"
   local CPPCHECK_OPTION_CSV="${CPPCHECK_OPTION}"
   local CPPCHECK_HTML_OPTION="--file=${CPPCHECK_RESULT_XML} --report-dir ${CPPCHECK_RESULT_HTML}"
 
