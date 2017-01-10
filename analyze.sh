@@ -251,7 +251,7 @@ do
   case "$1" in
     '-h'|'--help' )
       usage
-      exit 1
+      exit 0
       ;;
     '--cppcheck' )
       echo "[CONF] Enabled cppcheck"

@@ -10,4 +10,10 @@ before_install:
   - sudo apt-get install -y --force-yes subversion
   - svn export http://svn.openrtm.org/OpenRTM-aist/trunk/OpenRTM-aist src
 script:
+    - ./analyze.sh --help
+    - ./analyze.sh --cccc
+    - ./analyze.sh --sloccount
+    - ./analyze.sh --cpd
+    - ./analyze.sh --cpplint
+    - ./analyze.sh --cppcheck
     - ./analyze.sh --all
