@@ -2,7 +2,7 @@
 # @(#) This is xxxxxxxxxxxx.
 
 # Checks unnecessary paramters
-set -ue
+set -u
 
 ####################
 # GLOBAL CONSTANTS #
@@ -63,12 +63,15 @@ find_sources() {
 
 ## FunctionXXX
 function install_cppcheck() {
+  echo '[ANALYZE] Install cppcheck...'
   local CPPCHECK_REPOSITORY=git://github.com/danmar/cppcheck.git
   local CPPCHECK_BUILD_OPTION='SRCDIR=build CFGDIR=cppcheck/cfg HAVE_RULES=yes CXXFLAGS=-O2 CXXFLAGS+=-DNDEBUG CXXFLAGS+=-Wall CXXFLAGS+=-Wno-sign-compare CXXFLAGS+=-Wno-unused-function'
 
   rm -rf cppcheck
-  git clone ${CPPCHECK_REPOSITORY} cppcheck
-  (cd cppcheck && make ${CPPCHECK_BUILD_OPTION})
+  git clone ${CPPCHECK_REPOSITORY} cppcheck > /dev/null
+  (cd cppcheck && make ${CPPCHECK_BUILD_OPTION} > /dev/null)
+
+  echo '[ANALYZE] Installed cppcheck'
 
   return 0
 }
@@ -82,7 +85,7 @@ function do_cppcheck() {
   local CPPCHECK_RESULT_XML=${CPPCHECK_RESULT}.xml
   local CPPCHECK_RESULT_CSV=${CPPCHECK_RESULT}.csv
   local CPPCHECK_RESULT_HTML=${CPPCHECK_RESULT}.html
-  local CPPCHECK_OPTION="--quiet --enable=all --file-list=-"
+  local CPPCHECK_OPTION="--quiet --enable=all"
   local CPPCHECK_OPTION_XML="${CPPCHECK_OPTION} --xml --xml-version=2"
   local CPPCHECK_OPTION_CSV="${CPPCHECK_OPTION}"
   local CPPCHECK_HTML_OPTION="--file=${CPPCHECK_RESULT_XML} --report-dir ${CPPCHECK_RESULT_HTML}"
@@ -95,9 +98,12 @@ function do_cppcheck() {
     mkdir -p ${CPPCHECK_RESULTS_DIR}
   fi
 
-  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_XML} 2>&1 > ${CPPCHECK_RESULT_XML}
-  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_CSV} 2>&1 > ${CPPCHECK_RESULT_CSV}
-  ${CPPCHECK_HTML_BIN} ${CPPCHECK_HTML_OPTION}
+  echo "[ANALYZE] cppcheck output XML style : ${CPPCHECK_RESULT_XML}"
+  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_XML} ${SRC_DIR} 2> ${CPPCHECK_RESULT_XML} > /dev/null
+  echo "[ANALYZE] cppcheck output CSV style : $CPPCHECK_RESULT_CSV"
+  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_CSV} ${SRC_DIR} 2> ${CPPCHECK_RESULT_CSV} > /dev/null
+  echo "[ANALYZE] cppcheck output HTML style: $CPPCHECK_RESULT_HTML"
+  ${CPPCHECK_HTML_BIN} ${CPPCHECK_HTML_OPTION} >& /dev/null
 
   echo '[ANALYZE] Finish cppcheck'
   return 0
@@ -105,11 +111,14 @@ function do_cppcheck() {
 
 ## FunctionXXX
 function install_cccc() {
+  echo '[ANALYZE] Install cccc...'
   local CCCC_REPOSITORY=git://github.com/sarnold/cccc.git
 
   rm -rf cccc
-  git clone ${CCCC_REPOSITORY} cccc
-  (cd cccc && make)
+  git clone ${CCCC_REPOSITORY} cccc >& /dev/null
+  (cd cccc && make >& /dev/null)
+
+  echo '[ANALYZE] Installed cccc'
 
   return 0
 }
@@ -129,7 +138,7 @@ function do_cccc() {
     mkdir -p ${CCCC_RESULTS_DIR}
   fi
 
-  find_sources | xargs ${CCCC_BIN} --outdir="${CCCC_RESULT}" &> /dev/null
+  find_sources | xargs ${CCCC_BIN} --outdir="${CCCC_RESULT}" >& /dev/null
 
   echo '[ANALYZE] Finish cccc'
   return 0
@@ -137,11 +146,14 @@ function do_cccc() {
 
 ## FunctionXXX
 function install_sloccount() {
+  echo '[ANALYZE] Install sloccount...'
   local SLOCCOUNT_REPOSITORY=git://git.code.sf.net/p/sloccount/code
 
   rm -rf sloccount
-  git clone ${SLOCCOUNT_REPOSITORY} sloccount
-  (cd sloccount && make)
+  git clone ${SLOCCOUNT_REPOSITORY} sloccount >& /dev/null
+  (cd sloccount && make >& /dev/null)
+
+  echo '[ANALYZE] Installed sloccount'
 
   return 0
 }
@@ -173,10 +185,13 @@ function do_sloccount() {
 
 ## FunctionXXX
 function install_cpplint() {
+  echo '[ANALYZE] Install cpplint...'
   local CPPLINT_REPOSITORY=git://github.com/google/styleguide.git
 
   rm -rf cpplint
-  git clone ${CPPLINT_REPOSITORY} cpplint
+  git clone ${CPPLINT_REPOSITORY} cpplint >& /dev/null
+
+  echo '[ANALYZE] Installed cpplint'
 
   return 0
 }
@@ -196,7 +211,7 @@ function do_cpplint() {
     mkdir -p ${CPPLINT_RESULTS_DIR}
   fi
 
-  ${CPPLINT_BIN} `find ${SRC_DIR} -name *.cpp` 2>&1 > ${CPPLINT_RESULT}
+  ${CPPLINT_BIN} `find ${SRC_DIR} -name *.cpp` 2> ${CPPLINT_RESULT} > /dev/null
 
   echo '[ANALYZE] Finish cpplint'
   return 0
@@ -204,13 +219,16 @@ function do_cpplint() {
 
 ## FunctionXXX
 function install_cpd() {
+  echo '[ANALYZE] Install cpd...'
   local PMD_VERSION=5.3.7
   local PMD_ZIP=https://sourceforge.net/projects/pmd/files/pmd/${PMD_VERSION}/pmd-bin-${PMD_VERSION}.zip
 
   rm -rf pmd*.zip pmd
   wget ${PMD_ZIP}
-  unzip `basename ${PMD_ZIP}`
+  unzip `basename ${PMD_ZIP}` >& /dev/null
   mv pmd-bin-${PMD_VERSION} pmd
+
+  echo '[ANALYZE] Installed cpd'
 
   return 0
 }
@@ -235,8 +253,10 @@ function do_cpd() {
     mkdir -p ${CPD_RESULTS_DIR}
   fi
 
-  ${CPD_BIN} cpd ${CPD_OPTION_XML} --files ${SRC_DIR} > ${CPD_RESULT_XML} &
-  ${CPD_BIN} cpd ${CPD_OPTION_CSV} --files ${SRC_DIR} > ${CPD_RESULT_CSV} &
+  echo "[ANALYZE] cpd output XML style : ${CPD_RESULT_XML}"
+  ${CPD_BIN} cpd ${CPD_OPTION_XML} --files ${SRC_DIR} > ${CPD_RESULT_XML} 2> /dev/null &
+  echo "[ANALYZE] cpd output CSV style : ${CPD_RESULT_CSV}"
+  ${CPD_BIN} cpd ${CPD_OPTION_CSV} --files ${SRC_DIR} > ${CPD_RESULT_CSV} 2> /dev/null &
 
   echo '[ANALYZE] Finish cpd'
   return 0
