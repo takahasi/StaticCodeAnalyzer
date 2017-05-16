@@ -1,5 +1,5 @@
 #!/bin/bash
-# @(#) This is xxxxxxxxxxxx.
+# This is script for several static analysis.
 
 # Checks unnecessary paramters
 set -u
@@ -21,9 +21,11 @@ ENABLE_CPD=n
 ENABLE_SLOCCOUNT=n
 ENABLE_CPPLINT=n
 
-## Usage
+# Usage
+# =====
 function usage() {
-  cat <<EOF
+  cat << EOF
+
 Usage:
   $0
 
@@ -53,6 +55,7 @@ Examples:
     \$ $0 --help
 
 EOF
+
   return 0
 }
 
