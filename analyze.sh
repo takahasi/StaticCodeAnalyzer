@@ -95,8 +95,8 @@ function do_cppcheck() {
     mkdir -p ${CPPCHECK_RESULTS_DIR}
   fi
 
-  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_XML} 2>&1 | tee ${CPPCHECK_RESULT_XML}
-  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_CSV} 2>&1 | tee ${CPPCHECK_RESULT_CSV}
+  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_XML} 2>&1 > ${CPPCHECK_RESULT_XML}
+  ${CPPCHECK_BIN} ${CPPCHECK_OPTION_CSV} 2>&1 > ${CPPCHECK_RESULT_CSV}
   ${CPPCHECK_HTML_BIN} ${CPPCHECK_HTML_OPTION}
 
   echo '[ANALYZE] Finish cppcheck'
@@ -165,7 +165,7 @@ function do_sloccount() {
   # patch for issue of sloccount path
   export PATH=$PATH:${PWD}/sloccount
 
-  ${SLOCCOUNT_BIN} ${SLOCCOUNT_OPTION} ${SRC_DIR} | tee ${SLOCCOUNT_RESULT}
+  ${SLOCCOUNT_BIN} ${SLOCCOUNT_OPTION} ${SRC_DIR} > ${SLOCCOUNT_RESULT}
 
   echo '[ANALYZE] Finish sloccount'
   return 0
@@ -196,7 +196,7 @@ function do_cpplint() {
     mkdir -p ${CPPLINT_RESULTS_DIR}
   fi
 
-  ${CPPLINT_BIN} `find ${SRC_DIR} -name *.cpp` 2>&1 | tee ${CPPLINT_RESULT}
+  ${CPPLINT_BIN} `find ${SRC_DIR} -name *.cpp` 2>&1 > ${CPPLINT_RESULT}
 
   echo '[ANALYZE] Finish cpplint'
   return 0
@@ -235,8 +235,8 @@ function do_cpd() {
     mkdir -p ${CPD_RESULTS_DIR}
   fi
 
-  ${CPD_BIN} cpd ${CPD_OPTION_XML} --files ${SRC_DIR} | tee ${CPD_RESULT_XML} &
-  ${CPD_BIN} cpd ${CPD_OPTION_CSV} --files ${SRC_DIR} | tee ${CPD_RESULT_CSV} &
+  ${CPD_BIN} cpd ${CPD_OPTION_XML} --files ${SRC_DIR} > ${CPD_RESULT_XML} &
+  ${CPD_BIN} cpd ${CPD_OPTION_CSV} --files ${SRC_DIR} > ${CPD_RESULT_CSV} &
 
   echo '[ANALYZE] Finish cpd'
   return 0
