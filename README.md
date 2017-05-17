@@ -14,28 +14,28 @@ This is script for several static analysis.
 
 Environment
 -----------
-WORK SPACE        = . (deault)
-SOURCE DIRECTORY  = ./src (default)
-RESULTS DIRECTORY = ./result_yyyymmdd (default)
+* WORK SPACE        = . (deault)
+* SOURCE DIRECTORY  = ./src (default)
+* RESULTS DIRECTORY = ./result_yyyymmdd (default)
 
 Options
 -------
--h,--help       : Print usage
---cppcheck      : analyze with cppcheck
---cccc          : analyze with cccc
---sloccount     : analyze with sloccount
---cpd           : analyze with cpd
---cpplint       : analyze with cpplint
---all           : analyze with all methods
+
+Option | Note
+------ | ----
+-h,--help | Print usage
+--cppcheck | analyze with cppcheck
+--cccc | analyze with cccc
+--sloccount | analyze with sloccount
+--cpd |  analyze with cpd
+--cpplint | analyze with cpplint
+--all|  analyze with all methods
 
 Examples
 --------
 * Executes all analysis
-`$ ./analyze.sh --all`
-
+** `$ ./analyze.sh --all`
 * Executes CPD & CPPCHECK
-`$ ./analyze.sh --cpd --cppcheck`
-
+** `$ ./analyze.sh --cpd --cppcheck`
 * Show help message
-`$ ./analyze.sh --help`
-
+** `$ ./analyze.sh --help`
