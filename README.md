@@ -14,9 +14,12 @@ This is script for several static analysis.
 
 Environment
 -----------
-* WORK SPACE        = . (deault)
-* SOURCE DIRECTORY  = ./src (default)
-* RESULTS DIRECTORY = ./result_yyyymmdd (default)
+
+Variable | Value
+-------- | -----
+WORK SPACE | . (deault)
+SOURCE DIRECTORY | ./src (default)
+RESULTS DIRECTORY | ./result_yyyymmdd (default)
 
 Options
 -------
@@ -34,8 +37,8 @@ Option | Note
 Examples
 --------
 * Executes all analysis
-** `$ ./analyze.sh --all`
+  * `$ ./analyze.sh --all`
 * Executes CPD & CPPCHECK
-** `$ ./analyze.sh --cpd --cppcheck`
+  * `$ ./analyze.sh --cpd --cppcheck`
 * Show help message
-** `$ ./analyze.sh --help`
+  * `$ ./analyze.sh --help`
