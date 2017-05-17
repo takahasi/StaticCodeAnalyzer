@@ -20,7 +20,6 @@ addons:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install subversion; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install java; fi
   - svn export http://svn.openrtm.org/OpenRTM-aist/trunk/OpenRTM-aist src
 
